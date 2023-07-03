@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  php72:
+    image: phpdockerio/php72-cli
+    volumes:
+      - ./:/var/www/html/modules/basicprestashopmodule
+    working_dir: /var/www/html/modules/basicprestashopmodule
+    environment:
+      _PS_ROOT_DIR_: /var/www/html
