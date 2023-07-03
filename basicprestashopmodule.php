@@ -172,9 +172,9 @@ class BasicPrestaShopModule extends Module
     protected function getConfigFormValues()
     {
         return [
-            'BASICPRESTASHOPMODULE_LIVE_MODE' => Configuration::get('BASICPRESTASHOPMODULE_LIVE_MODE', true),
-            'BASICPRESTASHOPMODULE_ACCOUNT_EMAIL' => Configuration::get('BASICPRESTASHOPMODULE_ACCOUNT_EMAIL', 'contact@prestashop.com'),
-            'BASICPRESTASHOPMODULE_ACCOUNT_PASSWORD' => Configuration::get('BASICPRESTASHOPMODULE_ACCOUNT_PASSWORD', null),
+            'BASICPRESTASHOPMODULE_LIVE_MODE' => Configuration::get('BASICPRESTASHOPMODULE_LIVE_MODE'),
+            'BASICPRESTASHOPMODULE_ACCOUNT_EMAIL' => Configuration::get('BASICPRESTASHOPMODULE_ACCOUNT_EMAIL'),
+            'BASICPRESTASHOPMODULE_ACCOUNT_PASSWORD' => Configuration::get('BASICPRESTASHOPMODULE_ACCOUNT_PASSWORD'),
         ];
     }
 
