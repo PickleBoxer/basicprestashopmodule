@@ -1,11 +1,5 @@
 name: PHP tests
-on:
-  push:
-    branches:
-      - 'master'
-  pull_request:
-    types: [opened, reopened, synchronize, edited]
-
+on: [push, pull_request]
 jobs:
   header-stamp:
     name: Check license headers
