@@ -24,27 +24,27 @@ test-front:
 	docker-compose run --rm node sh -c "npm test --prefix ./_dev/js/front"
 
 build-zip:
-	cp -Ra $(PWD) /tmp/ps_checkout
-	rm -rf /tmp/ps_checkout/.env.test
-	rm -rf /tmp/ps_checkout/.php_cs.*
-	rm -rf /tmp/ps_checkout/.travis.yml
-	rm -rf /tmp/ps_checkout/cloudbuild.yaml
-	rm -rf /tmp/ps_checkout/composer.*
-	rm -rf /tmp/ps_checkout/package.json
-	rm -rf /tmp/ps_checkout/.npmrc
-	rm -rf /tmp/ps_checkout/package-lock.json
-	rm -rf /tmp/ps_checkout/.gitignore
-	rm -rf /tmp/ps_checkout/deploy.sh
-	rm -rf /tmp/ps_checkout/.editorconfig
-	rm -rf /tmp/ps_checkout/.git
-	rm -rf /tmp/ps_checkout/.github
-	rm -rf /tmp/ps_checkout/_dev
-	rm -rf /tmp/ps_checkout/tests
-	rm -rf /tmp/ps_checkout/docker-compose.yml
-	rm -rf /tmp/ps_checkout/Makefile
-	mv -v /tmp/ps_checkout $(PWD)/ps_checkout
-	zip -r ps_checkout.zip ps_checkout
-	rm -rf $(PWD)/ps_checkout
+	cp -Ra $(PWD) /tmp/basicprestashopmodule
+	rm -rf /tmp/basicprestashopmodule/.env.test
+	rm -rf /tmp/basicprestashopmodule/.php_cs.*
+	rm -rf /tmp/basicprestashopmodule/.travis.yml
+	rm -rf /tmp/basicprestashopmodule/cloudbuild.yaml
+	rm -rf /tmp/basicprestashopmodule/composer.*
+	rm -rf /tmp/basicprestashopmodule/package.json
+	rm -rf /tmp/basicprestashopmodule/.npmrc
+	rm -rf /tmp/basicprestashopmodule/package-lock.json
+	rm -rf /tmp/basicprestashopmodule/.gitignore
+	rm -rf /tmp/basicprestashopmodule/deploy.sh
+	rm -rf /tmp/basicprestashopmodule/.editorconfig
+	rm -rf /tmp/basicprestashopmodule/.git
+	rm -rf /tmp/basicprestashopmodule/.github
+	rm -rf /tmp/basicprestashopmodule/_dev
+	rm -rf /tmp/basicprestashopmodule/tests
+	rm -rf /tmp/basicprestashopmodule/docker-compose.yml
+	rm -rf /tmp/basicprestashopmodule/Makefile
+	mv -v /tmp/basicprestashopmodule $(PWD)/basicprestashopmodule
+	zip -r basicprestashopmodule.zip basicprestashopmodule
+	rm -rf $(PWD)/basicprestashopmodule
 
 # target: build-zip-prod                   - Launch prod zip generation of the module (will not work on windows)
 build-zip-prod: build-back-prod test-front build-front build-zip
