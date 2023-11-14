@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -32,6 +33,11 @@ function upgrade_module_1_1_0($module)
      * Do everything you want right there,
      * You could add a column in one of your module's tables
      */
+
+    // create a new file in module root
+    $file = fopen(__DIR__ . '/../upgrade_file.txt', 'w');
+    fwrite($file, 'Hello World 1.1.0 !');
+    fclose($file);
 
     return true;
 }

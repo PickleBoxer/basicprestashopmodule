@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -21,9 +22,21 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+$autoloadPath = __DIR__ . '/vendor/autoload.php';
+if (file_exists($autoloadPath)) {
+    require_once $autoloadPath;
+}
+
+use BitbucketUpdateFetcher\UpdateFetcher;
+
 class BasicPrestaShopModule extends Module
 {
     protected $config_form = false;
+
+    /**
+     * @var UpdateFetcher
+     */
+    private $fetcher;
 
     public function __construct()
     {
@@ -37,6 +50,18 @@ class BasicPrestaShopModule extends Module
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
          */
         $this->bootstrap = true;
+
+        // Initialize the update fetcher
+        $this->fetcher = new UpdateFetcher(__DIR__ . '/temp', __DIR__ . '/..', 60);
+        $this->fetcher->setCurrentVersion($this->version);
+        $this->fetcher->setWorkspace('aerdigital');
+        $this->fetcher->setRepoSlug('test');
+        $this->fetcher->setAccessToken('ATCTT3xFfGN0ewdGjzds35DXEnCf6nGk1EEXIkpQsz4vGkDnHpbZONnFqVBe_nBp0t_YhWD4iU-iogcF8VgJskDpPsEMkZsUq43md003HwYlx4tKXlhRoWnY_aTNpMCsQSGSuKNV8VXSQ7L1bYHrmsGpqKkUKN5sVH3gMUeoD8yu1HNS51LzxDw=DE6C3C40');
+
+        // Custom logger (optional)
+        $logger = new \Monolog\Logger('default');
+        $logger->pushHandler(new Monolog\Handler\StreamHandler(__DIR__ . '/update.log'));
+        $this->fetcher->setLogger($logger);
 
         parent::__construct();
 
@@ -79,7 +104,11 @@ class BasicPrestaShopModule extends Module
             $this->postProcess();
         }
 
-        $this->context->smarty->assign('module_dir', $this->_path);
+        $this->context->smarty->assign([
+            'module_dir', $this->_path,
+            'controller_link' => $this->context->link->getAdminLink('AdminModules') . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name,
+            'upgrade_ajax_link' => __PS_BASE_URI__ . 'modules/' . $this->name . '/upgrade-ajax.php',
+        ]);
 
         $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
 
@@ -122,8 +151,8 @@ class BasicPrestaShopModule extends Module
         return [
             'form' => [
                 'legend' => [
-                'title' => $this->l('Settings'),
-                'icon' => 'icon-cogs',
+                    'title' => $this->l('Settings'),
+                    'icon' => 'icon-cogs',
                 ],
                 'input' => [
                     [
@@ -213,5 +242,51 @@ class BasicPrestaShopModule extends Module
     public function hookDisplayBanner()
     {
         /* Place your code here. */
+    }
+
+    public function ajaxProcessFetchUpdates()
+    {
+        // Check for a new update
+        if ($this->fetcher->checkUpdate() === false) {
+            $response = [
+                'status' => 'success',
+                'message' => $this->fetcher->checkUpdate(),
+            ];
+            exit(json_encode($response));
+        }
+
+        if ($this->fetcher->newVersionAvailable()) {
+            $response = [
+                'status' => 'success',
+                'message' => 'Updates available',
+                'updates' => $this->fetcher->getLatestVersion(),
+            ];
+        } else {
+            $response = [
+                'status' => 'success',
+                'message' => 'No updates available',
+            ];
+        }
+
+        exit(json_encode($response));
+    }
+
+    public function ajaxProcessInstallUpdates()
+    {
+        $result = $this->fetcher->update(false);
+
+        if ($result === true) {
+            $response = [
+                'status' => 'success',
+                'message' => 'Update installed! Now Upgrading module...',
+            ];
+        } else {
+            $response = [
+                'status' => 'success',
+                'message' => 'Update failed: ' . $result . '!<br>',
+            ];
+        }
+
+        exit(json_encode($response));
     }
 }
